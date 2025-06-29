@@ -2,10 +2,25 @@
 __pycache__/
 *.py[codz]
 *$py.class
-
+dist/
+.databricks/
+.venv/
+.vscode/
+.DS_Store
+.idea/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.pytype/
+.pyre/
+.dmypy.json
+dmypy.json
+.spyderproject
+.spyproject
 # C extensions
+*.egg-info/
 *.so
-
+scratch/
 # Distribution / packaging
 .Python
 build/

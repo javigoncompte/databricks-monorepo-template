@@ -1,0 +1,43 @@
+# This is a Databricks asset bundle definition for datastream.
+# See https://docs.databricks.com/dev-tools/bundles/index.html for documentation.
+bundle:
+  name: <enter-bundle-name-here>
+  databricks_cli_version: ">= 0.248.0"
+  uuid: <enter-uuid-here>
+variables:
+  type_of_deployment:
+    description: "The type of deployment to build"
+    default: "packages"
+    type: string
+  deployment_name:
+    description: "The name of the deployment to build with its parent directory"
+    default: "dataplatform"
+experimental:
+  python:
+    venv_path: .venv
+    resources:
+      - "resources:load_resources"
+workspace:
+  root_path: /Workspace/Users/${workspace.current_user.userName}/.bundle/${bundle.name}/my-envs/${bundle.target}/${var.deployment_name}
+artifacts:
+  default:
+    type: whl
+    path: .
+    build: rm ./dist/* && uvx --with uv-dynamic-versioning --from build pyproject-build --installer uv --outdir ./dist --wheel ${var.type_of_package}/${var.deployment_name}
+
+include:
+  - resources/*.yml
+  - resources/*/*.yml
+
+targets:
+  dev:
+    mode: development
+    default: true
+    workspace:
+      host: <enter-host-here>
+  prod:
+    mode: production
+    git:
+      branch: main
+    workspace:
+      host: <enter-host-here>

@@ -1,0 +1,70 @@
+[project]
+name = "dataplatform"
+version = "0.1.0"
+requires-python = "~=3.11"
+dependencies = []
+
+[dependency-groups]
+dev = [
+    "databricks-sdk>=0.56.0",
+    "databricks-bundles==0.257.0",
+    "pytest",
+    "ruff",
+    "una>=0.6.1",
+    "uv-dynamic-versioning>=0.8.2",
+    "poethepoet",
+]
+[tool.una]
+namespace = "namespace_example"
+requires-python = "~=3.11"
+
+[tool.uv.workspace]
+members = ["libs/*", "packages/*", "platform/*", "apps/*"]
+
+[tool.ruff]
+fix = true
+show-fixes = true
+line-length = 88
+indent-width = 4
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "auto"
+preview = true
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.basedpyright]
+pythonVersion = "3.11"
+venvPath = "."
+venv = ".venv"
+
+
+[tool.ruff.lint]
+dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
+select = ["I", "E4", "E7", "E9", "F", "B", "T100", "N", "A"]
+preview = true
+ignore = ["D417", "D100", "D101", "N812"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["dataplatform"]
+
+[tool.pytest.ini_options]
+pythonpath = ["libs/*", "packages/*", "platform/*", "apps/*"]
+testpaths = ["libs/*", "packages/*", "platform/*"]
+addopts = ""
+
+[tool.poe.tasks]
+# run with eg `uv run poe fmt`
+fmt = "ruff format"
+lint = "ruff check --fix"
+check = "pyright"
+test = "pytest"
+# run all the above
+all = [{ ref = "fmt" }, { ref = "lint" }, { ref = "check" }, { ref = "test" }]
+
+"ci:fmt" = "ruff format --check" # fail if not formatted
+"ci:lint" = "ruff check"
